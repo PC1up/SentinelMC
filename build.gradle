@@ -1,11 +1,11 @@
 plugins {
     id 'java'
     id("xyz.jpenilla.run-paper") version "2.3.1"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id 'com.gradleup.shadow' version '8.3.0'
 }
 
 group = 'de.pc1up'
-version = '1.0-SNAPSHOT'
+version = '1.0-RELEASE'
 
 repositories {
     mavenCentral()
@@ -25,6 +25,7 @@ dependencies {
     implementation("com.mysql:mysql-connector-j:9.3.0")
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
+    implementation("org.apache.commons:commons-lang3:3.17.0")
 }
 
 tasks {

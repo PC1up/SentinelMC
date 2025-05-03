@@ -10,13 +10,65 @@ database:
     mongo:
       connectionstring: "mongodb://localhost:27017/" # For further information visit https://www.mongodb.com/docs/manual/reference/connection-string/
       database: "sentinelmc"
-messages:
-  prefix: "<red><bold>SentinelMC</bold></red> <dark_gray>»</dark_gray>"
-  no_perms: "<red>You are not permitted to perform this action."
+modules: # This will just hinder command registering
+  bans: true # Includes /ban, /tempban, /unban, /checkban
+  mutes: true # Includes /mute, /tempmute, /unmute, /checkmute
+  warns: true # Includes /warn, /delwarn, /unwarn, /warnings
+  reports: true # Includes /report, /reportlist, /resolveall
+  misc:
+    vanish: true
+    spectate: true
+    staffchat: true
+reports:
+  cooldown: 300 # Cooldown in seconds, before a player can submit a new report after submitting one.
+  delete-resolved:
+    enabled: true # Should resolved reports be deleted automatically?
+    cutoff: 86400 # If so, how old (in seconds) does a resolved report have to be in order to be deleted? Default is 86400 seconds (1 day), so the plugin will, every hour (this is hardcoded), delete all reports that are marked as resolved and older than a day
+warn-ladder:
+  enabled: true
+  3: # When reaching 3 points, the player will be ...
+    action: "KICK" # kicked with reason... | Possible actions: KICK | TEMPMUTE | MUTE | TEMPBAN | BAN
+    reason: "Warn Points Exceeded: %last-reason%" # %last-reason% = Reason for the warning, that caused the ladder to execute
+  5:
+    action: "TEMPBAN"
+    duration: "12h"
+    reason: "Warn Points Exceeded: %last-reason%"
+  10:
+    action: "TEMPBAN"
+    duration: "7d"
+    reason: "Warn Points Exceeded: %last-reason%"
+  20:
+    action: "BAN"
+    reason: "Warn Points Exceeded: %last-reason%"
+messages: # All messages use MiniMessage: https://docs.advntr.dev/minimessage/format.html
+  prefix: "<gradient:#DC1C13:#F07470><bold>SentinelMC</bold></gradient> <dark_gray>»</dark_gray>"
   date_format: "dd.MM.yyyy HH:mm z" # Uses SimpleDateFormat. Visit https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+  duration:
+    second: "Second"
+    seconds: "Seconds"
+    minute: "Minute"
+    minutes: "Minutes"
+    hour: "Hour"
+    hours: "Hours"
+    day: "Day"
+    days: "Days"
+    expired: "Expired"
+    permanent: "Permanent"
+    never: "Never"
+    just_now: "Just now"
+    in_future: "In the future"
+  not_registered: "%PREFIX% <red>%player% is not registered."
+  not_online: "%PREFIX% <red>%player% is not online."
+  not_self: "%PREFIX% <red>You can't perform this action on yourself."
+  invalid_duration: "%PREFIX% <red>You provided an invalid duration."
+  types:
+    ban: "Ban"
+    tempban: "Temp-Ban"
+    mute: "Mute"
+    tempmute: "Temp-Mute"
   bansystem:
     ban:
-      usage: "%PREFIX% <red>Usage: /ban <player> <reason>"
+      usage: "%PREFIX% <red>Usage: /ban <player> <reason> (--note <note ...>)"
       already_banned: "%PREFIX% <red>%player% is already banned."
       not_allowed: "%PREFIX% <red>You are not allowed to ban %player%."
       success: "%PREFIX% <green>%player% has been banned."
@@ -30,11 +82,11 @@ messages:
         - " "
         - "<yellow><i>Visit <u>appeal.YourServer.com</u> to appeal this ban."
     tempban:
-      usage: "%PREFIX% <red>Usage: /tempban <player> <duration> <reason>"
+      usage: "%PREFIX% <red>Usage: /tempban <player> <duration> <reason> (--note <note ...>)"
       already_banned: "%PREFIX% <red>%player% is already banned."
       not_allowed: "%PREFIX% <red>You are not allowed to ban %player%."
       success: "%PREFIX% <green>%player% has been banned."
-      broadcast: "%PREFIX% <red>%player% <gray>was temporarily banned by <green>%author% <gray>for <red>%reason%" # Placeholders: %player% = Target Name | %author% = Author Name | %reason% = reason
+      broadcast: "%PREFIX% <red>%player% <gray>was temporarily banned by <green>%author% <gray>for <red>%reason%" # Placeholders: %player% = Target Name | %author% = Author Name | %reason% = reason | %duration%
       screen: # Placeholders: %reason% | %author% | %id% | %note% | %end_date% | %duration%
         - "<red>You are temporarily banned from this server."
         - " "
@@ -44,6 +96,16 @@ messages:
         - "<gray>Ban ID: <white>#%id%"
         - " "
         - "<yellow><i>Visit <u>appeal.YourServer.com</u> to appeal this ban."
+    kick:
+      usage: "%PREFIX% <red>Usage: /kick <player> <reason>"
+      not_allowed: "%PREFIX% <red>You are not allowed to kick %player%."
+      success: "%PREFIX% <green>%player% has been kicked."
+      broadcast: "%PREFIX% <red>%player% <gray>was kicked by <green>%author% <gray>for <red>%reason%" # Placeholders: %player% = Target Name | %author% = Author Name | %reason% = reason
+      screen: # Placeholders: %reason% | %author%
+        - "<red>You were kicked from this server."
+        - " "
+        - "<gray>Reason: <white>%reason%"
+        - "<gray>Kicked by: <white>%author%"
     unban:
       usage: "%PREFIX% <red>Usage: /unban <player> (reason)"
       not_banned: "%PREFIX% <red>%player% is not banned."
@@ -53,7 +115,6 @@ messages:
         reason: "%PREFIX% <red>%player% <gray>was unbanned by <green>%author% <gray>for <red>%reason%"
     checkban:
       usage: "%PREFIX% <red>Usage: /checkban <player>"
-      not_registered: "%PREFIX% <red>%player% is not registered."
       header: "%PREFIX% <gray>Checkban result for <red>%player%<gray>:"
       not_banned: "%PREFIX% <gray>Status: <green>Not banned"
       banned:
@@ -65,9 +126,13 @@ messages:
         - "%PREFIX%   <gray>Duration: <red>%duration%"
         - "%PREFIX%   <gray>Note: <red>%note%"
         - "%PREFIX%   <gray>ID: <red>%id%"
+    note:
+      usage: "%PREFIX% <red>Usage: /note <id> <note ...>"
+      invalid: "%PREFIX% <red>There is no punishment with that ID"
+      success: "%PREFIX% <green>The note of #%id% was updated."
   mutesystem:
     mute:
-      usage: "%PREFIX% <red>Usage: /mute <player> <reason>"
+      usage: "%PREFIX% <red>Usage: /mute <player> <reason> (--note <note ...>)"
       already_muted: "%PREFIX% <red>%player% is already muted."
       not_allowed: "%PREFIX% <red>You are not allowed to mute %player%."
       success: "%PREFIX% <green>%player% has been muted."
@@ -75,11 +140,11 @@ messages:
       screen: # Placeholders: %reason% | %author% | %id% | %note%
         - "<red>You are permanently muted for %reason%"
     tempmute:
-      usage: "%PREFIX% <red>Usage: /tempmute <player> <duration> <reason>"
+      usage: "%PREFIX% <red>Usage: /tempmute <player> <duration> <reason> (--note <note ...>)"
       already_muted: "%PREFIX% <red>%player% is already muted."
       not_allowed: "%PREFIX% <red>You are not allowed to mute %player%."
       success: "%PREFIX% <green>%player% has been muted."
-      broadcast: "%PREFIX% <red>%player% <gray>was temporarily muted by <green>%author% <gray>for <red>%reason%" # Placeholders: %player% = Target Name | %author% = Author Name | %reason% = reason
+      broadcast: "%PREFIX% <red>%player% <gray>was temporarily muted by <green>%author% <gray>for <red>%reason%" # Placeholders: %player% = Target Name | %author% = Author Name | %reason% = reason | %duration%
       screen: # Placeholders: %reason% | %author% | %id% | %note% | %end_date% | %duration%
         - "<red>You are temporarily muted for %reason% until %end_date%"
     unmute:
@@ -91,7 +156,6 @@ messages:
         reason: "%PREFIX% <red>%player% <gray>was unmuted by <green>%author% <gray>for <red>%reason%"
     checkmute:
       usage: "%PREFIX% <red>Usage: /checkmute <player>"
-      not_registered: "%PREFIX% <red>%player% is not registered."
       header: "%PREFIX% <gray>Checkmute result for <red>%player%<gray>:"
       not_muted: "%PREFIX% <gray>Status: <green>Not muted"
       muted:
@@ -103,3 +167,99 @@ messages:
         - "%PREFIX%   <gray>Duration: <red>%duration%"
         - "%PREFIX%   <gray>Note: <red>%note%"
         - "%PREFIX%   <gray>ID: <red>%id%"
+  reportsystem:
+    report:
+      usage: "%PREFIX% <red>Usage: /report <player> <reason>"
+      cooldown: "%PREFIX% <red>Please wait a moment before reporting again."
+      success: "%PREFIX% <green>Your report was sent and will be reviewed by our staff soon."
+      broadcast: "%PREFIX% <red>%target% <gray>was reported by <green>%author% <gray>for <red>%reason%"
+    reportlist:
+      title: "<red><bold>Report List"
+      show_unresolved: "<gold><bold>Show Unresolved"
+      show_resolved: "<yellow><bold>Show Resolved"
+      item:
+        unresolved:
+          name: "<red>Report against %target%"
+          lores:
+            - "  <dark_gray>» <gray>By: <red>%author%"
+            - "  <dark_gray>» <gray>Reason: <red>%reason%"
+            - "  <dark_gray>» <red>%ago% <gray>ago"
+            - "  <dark_gray>» <yellow><i>Left click to teleport"
+            - "  <dark_gray>» <yellow><i>Right click to mark resolved"
+        resolved:
+          name: "<red>Report against %target%"
+          lores:
+            - "  <dark_gray>» <gray>By: <red>%author%"
+            - "  <dark_gray>» <gray>Reason: <red>%reason%"
+            - "  <dark_gray>» <gray>Resolved by: <red>%resolved_by%"
+            - "  <dark_gray>» <red>%ago% <gray>ago"
+            - "  <dark_gray>» <yellow><i>Click to mark unresolved"
+      resolved: "%PREFIX% <green>You marked #%id% as resolved."
+      unresolved: "%PREFIX% <red>You marked #%id% as unresolved."
+    resolveall:
+      usage: "%PREFIX% <red>Usage: /resolveall <player>"
+      success: "%PREFIX% <green>Marked %amount% reports as resolved."
+  warnsystem:
+    warn:
+      usage: "%PREFIX% <red>Usage: /warn <player> <reason> (--points <points>)"
+      not_allowed: "%PREFIX% <red>You are not allowed to warn %player%."
+      success: "%PREFIX% <green>%player% has been warned."
+      broadcast: "%PREFIX% <red>%player% <gray>was warned by <green>%author% <gray>for <red>%reason%" # Placeholders: %player% = Target Name | %author% = Author Name | %reason% = reason
+      screen: # Placeholders: %reason% | %author% | %points% | %id%
+        - "<dark_gray><st>---------------------------------------------------"
+        - " "
+        - "<red><bold>YOU RECEIVED A WARNING"
+        - "<gray>Reason: <white>%reason%"
+        - "<gray>Warned by: <white>%author%"
+        - "<gray>Warn Points: <white>%points%"
+        - "<gray>Warning ID: <white>#%id%"
+        - " "
+        - "<dark_gray><st>---------------------------------------------------"
+    unwarn:
+      usage: "%PREFIX% <red>Usage: /unwarn <player>"
+      not_warned: "%PREFIX% <red>%player% has no warnings."
+      success: "%PREFIX% <green>%player% has been unwarned."
+      broadcast: "%PREFIX% <red>%player% <gray>was unwarned by <green>%author%"
+    delwarn:
+      usage: "%PREFIX% <red>Usage: /delwarn <id>"
+      invalid: "%PREFIX% <red>There is no warning with that ID."
+      success: "%PREFIX% <green>#%id% has been revoked."
+      broadcast: "%PREFIX% <red>#%id% <gray>was revoked by <green>%author%"
+    warnings:
+      usage: "%PREFIX% <red>Usage: /warnings <player>"
+      no_entries: "%PREFIX% <red>%player% has no warnings."
+      header: "%PREFIX% <gray>Warnings against <red>%player%<gray>:"
+      entry: # Placeholders: %date% = Timestamp | %author% | %reason% | %id% | %points%
+        - "  <dark_gray>» <red>#%id% <gray>on <white>%date%<gray>: <red>%reason% <dark_gray>(%points% pts.) <gray>by <red>%author%"
+  history:
+    usage: "%PREFIX% <red>Usage: /history <player>"
+    empty: "%PREFIX% <red>%player% has no history."
+    title: "<red><bold>History of %player%"
+    entry: # Placeholders: %type% = Ban or Mute | %start_date% | %author% | %reason% | %end_date% | %duration% | %note% | %id%
+      status:
+        active: "<green><bold>Active"
+        expired: "<yellow><bold>Expired"
+        revoked: "<gold><bold>Revoked <white>by <gold>%revoked_by% <white>for <gold>%revoke_reason%"
+      name: "<red>%type% <gray>on <white>%start_date%"
+      lores:
+        - "  <dark_gray>» <gray>By: <red>%author%"
+        - "  <dark_gray>» <gray>Reason: <red>%reason%"
+        - "  <dark_gray>» <gray>Issued: <red>%start_date%"
+        - "  <dark_gray>» <gray>Expires: <red>%end_date%"
+        - "  <dark_gray>» <gray>Duration: <red>%duration%"
+        - "  <dark_gray>» <gray>Note: <red>%note%"
+        - "  <dark_gray>» <gray>ID: <red>#%id%"
+        - " "
+        - "  <dark_gray>» <gray>Status: <red>%status%"
+  misc:
+    vanish:
+      enabled: "%PREFIX% <green>You are now vanished."
+      disabled: "%PREFIX% <red>You are no longer vanished."
+    spectate:
+      usage: "%PREFIX% <red>Usage: /spectate <player>"
+      enabled: "%PREFIX% <green>You are now spectating %player%. Use <i>/spectate</i> to leave spectator mode."
+      disabled: "%PREFIX% <red>You are no longer spectating."
+    teleported: "%PREFIX% <green>You were teleported to %player%."
+    staffchat:
+      usage: "%PREFIX% <red>Usage: /staffchat <message ...>"
+      message: "%PREFIX% <red>%player%<gray>: <white>%message%"

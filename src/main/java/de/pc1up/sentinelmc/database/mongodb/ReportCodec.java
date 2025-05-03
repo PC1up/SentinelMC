@@ -1,6 +1,6 @@
 package de.pc1up.sentinelmc.database.mongodb;
 
-import de.pc1up.sentinelmc.punishments.Report;
+import de.pc1up.sentinelmc.objects.Report;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;

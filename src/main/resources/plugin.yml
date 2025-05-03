@@ -1,4 +1,76 @@
 name: SentinelMC
-version: '1.0-SNAPSHOT'
+version: '1.0-RELEASE'
 main: de.pc1up.sentinelmc.SentinelMC
 api-version: '1.21'
+author: 'PC1up'
+description: 'The all-in-one moderation solution.'
+commands:
+  kick:
+    description: 'Kicks a player from the server once'
+    permission: sentinelmc.command.kick
+  history:
+    description: 'Shows the punishment history of a player'
+    permission: sentinelmc.command.history
+  ban:
+    description: 'Permanently bans a player'
+    permission: sentinelmc.command.ban
+  tempban:
+    description: 'Temporarily bans a player'
+    permission: sentinelmc.command.tempban
+  unban:
+    description: 'Revokes the active ban of a player'
+    permission: sentinelmc.command.unban
+  checkban:
+    description: 'Shows the ban status of a player'
+    permission: sentinelmc.command.checkban
+  mute:
+    description: 'Permanently mutes a player'
+    permission: sentinelmc.command.mute
+  tempmute:
+    description: 'Temporarily mutes a player'
+    permission: sentinelmc.command.tempmute
+  unmute:
+    description: 'Revokes the active mute of a player'
+    permission: sentinelmc.command.unmute
+  checkmute:
+    description: 'Shows the mute status of a player'
+    permission: sentinelmc.command.checkmute
+  note:
+    description: 'Updates the note of a punishment'
+    permission: sentinelmc.command.note
+  report:
+    description: 'Report a rule breaker'
+  reportlist:
+    aliases:
+      - reports
+    description: 'List all reports'
+    permission: sentinelmc.command.reportlist
+  resolveall:
+    description: 'Marks all unresolved reports against a player as resolved.'
+    permission: sentinelmc.command.resolveall
+  warn:
+    description: 'Issue a warning against a player'
+    permission: sentinelmc.command.warn
+  unwarn:
+    description: 'Delete the latest warning against a player'
+    permission: sentinelmc.command.unwarn
+  delwarn:
+    description: 'Delete a specific warning'
+    permission: sentinelmc.command.delwarn
+  warnings:
+    description: 'List all warnings against a player'
+    permission: sentinelmc.command.warnings
+  vanish:
+    description: 'Hides you from all players, that don''t have the sentinelmc.see-vanished permission'
+    permission: sentinelmc.command.vanish
+  spectate:
+    description: 'Sets you in spectator mode and teleports you to the specified player'
+    permission: sentinelmc.command.spectate
+  staffchat:
+    description: 'Sends a message to all online staff members'
+    permission: sentinelmc.command.staffchat
+    aliases:
+      - sc
+  sentinelmc:
+    description: 'Config reload command'
+    permission: sentinelmc.command.sentinelmc

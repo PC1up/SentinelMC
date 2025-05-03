@@ -1,12 +1,13 @@
-package de.pc1up.sentinelmc.punishments;
+package de.pc1up.sentinelmc.objects;
 
+import de.pc1up.sentinelmc.SentinelMC;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.UUID;
+import lombok.Setter;
 
 @AllArgsConstructor
 @Getter
+@Setter
 public class Report {
     private final String id;
     private String targetName;
@@ -15,4 +16,8 @@ public class Report {
     private String reason;
     private boolean resolved;
     private String resolvedBy;
+
+    public void save() {
+        SentinelMC.instance.getDatabaseProvider().saveReport(this);
+    }
 }
