@@ -10,19 +10,7 @@ import org.bson.codecs.EncoderContext;
 import java.util.UUID;
 
 public class PunishmentCodec implements Codec<Punishment> {
-    /*
-        private final String id;
-    private UUID targetUUID;
-    private String authorName;
-    private String reason;
-    private long startTime;
-    private long endTime;
-    private String duration;
-    private String note;
-    private boolean revoked;
-    private String revokedBy;
-    private String revokeReason;
-     */
+
     @Override
     public Punishment decode(BsonReader reader, DecoderContext decoderContext) {
         reader.readStartDocument();
@@ -38,8 +26,9 @@ public class PunishmentCodec implements Codec<Punishment> {
         boolean revoked = reader.readBoolean("revoked");
         String revokedBy = reader.readString("revokedBy");
         String revokeReason = reader.readString("revokeReason");
+        boolean ban = reader.readBoolean("ban");
         reader.readEndDocument();
-        return new Punishment(id, targetUUID, authorName, reason, startTime, endTime, duration, note, revoked, revokedBy, revokeReason);
+        return new Punishment(id, targetUUID, authorName, reason, startTime, endTime, duration, note, revoked, revokedBy, revokeReason, ban);
     }
 
     @Override
@@ -55,6 +44,7 @@ public class PunishmentCodec implements Codec<Punishment> {
         writer.writeBoolean("revoked", punishment.isRevoked());
         writer.writeString("revokedBy", punishment.getRevokedBy());
         writer.writeString("revokeReason", punishment.getRevokeReason());
+        writer.writeBoolean("ban", punishment.isBan());
         writer.writeEndDocument();
     }
 

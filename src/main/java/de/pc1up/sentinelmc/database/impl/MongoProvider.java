@@ -2,18 +2,20 @@ package de.pc1up.sentinelmc.database.impl;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.client.*;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.InsertOneOptions;
-import com.mongodb.client.model.UpdateOptions;
 import de.pc1up.sentinelmc.SentinelMC;
 import de.pc1up.sentinelmc.database.DatabaseProvider;
 import de.pc1up.sentinelmc.database.mongodb.PunishmentCodec;
+import de.pc1up.sentinelmc.database.mongodb.ReportCodec;
 import de.pc1up.sentinelmc.database.mongodb.UserProfileCodec;
 import de.pc1up.sentinelmc.punishments.Punishment;
+import de.pc1up.sentinelmc.punishments.Report;
 import de.pc1up.sentinelmc.punishments.UserProfile;
 import org.bson.codecs.configuration.CodecRegistries;
-import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ public class MongoProvider implements DatabaseProvider {
     private MongoClient mongoClient;
     private MongoCollection<Punishment> punishmentMongoCollection;
     private MongoCollection<UserProfile> userProfileMongoCollection;
+    private MongoCollection<Report> reportMongoCollection;
 
     @Override
     public void initialize() {
@@ -34,7 +37,8 @@ public class MongoProvider implements DatabaseProvider {
                 .codecRegistry(
                         CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
                                 CodecRegistries.fromCodecs(new PunishmentCodec()),
-                                CodecRegistries.fromCodecs(new UserProfileCodec()))
+                                CodecRegistries.fromCodecs(new UserProfileCodec()),
+                                CodecRegistries.fromCodecs(new ReportCodec()))
                 ).build();
 
         String database = SentinelMC.instance.getConfiguration().getString("database.credentials.mongo.database", "sentinelmc");
@@ -42,12 +46,13 @@ public class MongoProvider implements DatabaseProvider {
         MongoDatabase mongoDatabase = mongoClient.getDatabase(database);
         this.punishmentMongoCollection = mongoDatabase.getCollection("sentinelmc_punishments", Punishment.class);
         this.userProfileMongoCollection = mongoDatabase.getCollection("sentinelmc_userprofiles", UserProfile.class);
+        this.reportMongoCollection = mongoDatabase.getCollection("sentinelmc_reports", Report.class);
         SentinelMC.instance.getLogger().info("[SentinelMC] MongoDB initialized!");
     }
 
     @Override
     public void savePunishment(Punishment punishment) {
-        if(getPunishment(punishment.getId()) == null) {
+        if (getPunishment(punishment.getId()) == null) {
             this.punishmentMongoCollection.insertOne(punishment);
         } else {
             this.punishmentMongoCollection.replaceOne(
@@ -69,7 +74,7 @@ public class MongoProvider implements DatabaseProvider {
 
     @Override
     public void saveUser(UserProfile userProfile) {
-        if(getProfile(userProfile.getUuid()) == null) {
+        if (getProfile(userProfile.getUuid()) == null) {
             this.userProfileMongoCollection.insertOne(userProfile);
         } else {
             this.userProfileMongoCollection.replaceOne(
@@ -87,6 +92,41 @@ public class MongoProvider implements DatabaseProvider {
     @Override
     public UserProfile getProfile(String name) {
         return this.userProfileMongoCollection.find(Filters.eq("name", name)).first();
+    }
+
+    @Override
+    public void saveReport(Report report) {
+        if(getReport(report.getId()) == null){
+            this.reportMongoCollection.insertOne(report);
+        } else {
+            this.reportMongoCollection.replaceOne(Filters.eq("id", report.getId()), report);
+        }
+    }
+
+    @Override
+    public Report getReport(String id) {
+        return this.reportMongoCollection.find(Filters.eq("id", id)).first();
+    }
+
+    @Override
+    public List<Report> getReportsAgainst(String name) {
+        return this.reportMongoCollection.find(
+                Filters.eq("targetName", name)
+        ).into(new ArrayList<>());
+    }
+
+    @Override
+    public List<Report> getReportsBy(String name) {
+        return this.reportMongoCollection.find(
+                Filters.eq("authorName", name)
+        ).into(new ArrayList<>());
+    }
+
+    @Override
+    public List<Report> getUnresolvedReports() {
+        return this.reportMongoCollection.find(
+                Filters.eq("resolved", false)
+        ).into(new ArrayList<>());
     }
 
     @Override

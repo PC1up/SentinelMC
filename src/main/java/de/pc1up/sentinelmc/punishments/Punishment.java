@@ -21,4 +21,5 @@ public class Punishment {
     private boolean revoked;
     private String revokedBy;
     private String revokeReason;
+    private boolean ban;
 }

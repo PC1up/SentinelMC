@@ -1,7 +1,7 @@
 database:
   system: 'sqlite' # sqlite / mongodb / mysql
   credentials:
-    sql:
+    mysql:
       host: 'localhost'
       port: 3306 # You probably want to change that if you're using MongoDB. The default MongoDB Port ist 27017
       user: "sentinelmc"
@@ -11,4 +11,95 @@ database:
       connectionstring: "mongodb://localhost:27017/" # For further information visit https://www.mongodb.com/docs/manual/reference/connection-string/
       database: "sentinelmc"
 messages:
-  prefix: "<red><bold>SentinelMC</bold></red> <dark_gray>»</dark_gray> "
+  prefix: "<red><bold>SentinelMC</bold></red> <dark_gray>»</dark_gray>"
+  no_perms: "<red>You are not permitted to perform this action."
+  date_format: "dd.MM.yyyy HH:mm z" # Uses SimpleDateFormat. Visit https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+  bansystem:
+    ban:
+      usage: "%PREFIX% <red>Usage: /ban <player> <reason>"
+      already_banned: "%PREFIX% <red>%player% is already banned."
+      not_allowed: "%PREFIX% <red>You are not allowed to ban %player%."
+      success: "%PREFIX% <green>%player% has been banned."
+      broadcast: "%PREFIX% <red>%player% <gray>was permanently banned by <green>%author% <gray>for <red>%reason%" # Placeholders: %player% = Target Name | %author% = Author Name | %reason% = reason
+      screen: # Placeholders: %reason% | %author% | %id% | %note%
+        - "<red>You are permanently banned from this server."
+        - " "
+        - "<gray>Reason: <white>%reason%"
+        - "<gray>Banned by: <white>%author%"
+        - "<gray>Ban ID: <white>#%id%"
+        - " "
+        - "<yellow><i>Visit <u>appeal.YourServer.com</u> to appeal this ban."
+    tempban:
+      usage: "%PREFIX% <red>Usage: /tempban <player> <duration> <reason>"
+      already_banned: "%PREFIX% <red>%player% is already banned."
+      not_allowed: "%PREFIX% <red>You are not allowed to ban %player%."
+      success: "%PREFIX% <green>%player% has been banned."
+      broadcast: "%PREFIX% <red>%player% <gray>was temporarily banned by <green>%author% <gray>for <red>%reason%" # Placeholders: %player% = Target Name | %author% = Author Name | %reason% = reason
+      screen: # Placeholders: %reason% | %author% | %id% | %note% | %end_date% | %duration%
+        - "<red>You are temporarily banned from this server."
+        - " "
+        - "<gray>Reason: <white>%reason%"
+        - "<gray>Banned by: <white>%author%"
+        - "<gray>Banned until: <white>%end_date%"
+        - "<gray>Ban ID: <white>#%id%"
+        - " "
+        - "<yellow><i>Visit <u>appeal.YourServer.com</u> to appeal this ban."
+    unban:
+      usage: "%PREFIX% <red>Usage: /unban <player> (reason)"
+      not_banned: "%PREFIX% <red>%player% is not banned."
+      success: "%PREFIX% <green>%player% has been unbanned."
+      broadcast:
+        no_reason: "%PREFIX% <red>%player% <gray>was unbanned by <green>%author%"
+        reason: "%PREFIX% <red>%player% <gray>was unbanned by <green>%author% <gray>for <red>%reason%"
+    checkban:
+      usage: "%PREFIX% <red>Usage: /checkban <player>"
+      not_registered: "%PREFIX% <red>%player% is not registered."
+      header: "%PREFIX% <gray>Checkban result for <red>%player%<gray>:"
+      not_banned: "%PREFIX% <gray>Status: <green>Not banned"
+      banned:
+        - "%PREFIX% <gray>Status: <red>Banned"
+        - "%PREFIX%   <gray>Reason: <red>%reason%"
+        - "%PREFIX%   <gray>Author: <red>%author%"
+        - "%PREFIX%   <gray>Issued: <red>%start_date%"
+        - "%PREFIX%   <gray>Expires: <red>%end_date%"
+        - "%PREFIX%   <gray>Duration: <red>%duration%"
+        - "%PREFIX%   <gray>Note: <red>%note%"
+        - "%PREFIX%   <gray>ID: <red>%id%"
+  mutesystem:
+    mute:
+      usage: "%PREFIX% <red>Usage: /mute <player> <reason>"
+      already_muted: "%PREFIX% <red>%player% is already muted."
+      not_allowed: "%PREFIX% <red>You are not allowed to mute %player%."
+      success: "%PREFIX% <green>%player% has been muted."
+      broadcast: "%PREFIX% <red>%player% <gray>was permanently muted by <green>%author% <gray>for <red>%reason%" # Placeholders: %player% = Target Name | %author% = Author Name | %reason% = reason
+      screen: # Placeholders: %reason% | %author% | %id% | %note%
+        - "<red>You are permanently muted for %reason%"
+    tempmute:
+      usage: "%PREFIX% <red>Usage: /tempmute <player> <duration> <reason>"
+      already_muted: "%PREFIX% <red>%player% is already muted."
+      not_allowed: "%PREFIX% <red>You are not allowed to mute %player%."
+      success: "%PREFIX% <green>%player% has been muted."
+      broadcast: "%PREFIX% <red>%player% <gray>was temporarily muted by <green>%author% <gray>for <red>%reason%" # Placeholders: %player% = Target Name | %author% = Author Name | %reason% = reason
+      screen: # Placeholders: %reason% | %author% | %id% | %note% | %end_date% | %duration%
+        - "<red>You are temporarily muted for %reason% until %end_date%"
+    unmute:
+      usage: "%PREFIX% <red>Usage: /unmute <player> (reason)"
+      not_muted: "%PREFIX% <red>%player% is not muted."
+      success: "%PREFIX% <green>%player% has been unmuted."
+      broadcast:
+        no_reason: "%PREFIX% <red>%player% <gray>was unmuted by <green>%author%"
+        reason: "%PREFIX% <red>%player% <gray>was unmuted by <green>%author% <gray>for <red>%reason%"
+    checkmute:
+      usage: "%PREFIX% <red>Usage: /checkmute <player>"
+      not_registered: "%PREFIX% <red>%player% is not registered."
+      header: "%PREFIX% <gray>Checkmute result for <red>%player%<gray>:"
+      not_muted: "%PREFIX% <gray>Status: <green>Not muted"
+      muted:
+        - "%PREFIX% <gray>Status: <red>Muted"
+        - "%PREFIX%   <gray>Reason: <red>%reason%"
+        - "%PREFIX%   <gray>Author: <red>%author%"
+        - "%PREFIX%   <gray>Issued: <red>%start_date%"
+        - "%PREFIX%   <gray>Expires: <red>%end_date%"
+        - "%PREFIX%   <gray>Duration: <red>%duration%"
+        - "%PREFIX%   <gray>Note: <red>%note%"
+        - "%PREFIX%   <gray>ID: <red>%id%"

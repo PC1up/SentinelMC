@@ -2,6 +2,8 @@ package de.pc1up.sentinelmc;
 
 import de.pc1up.sentinelmc.database.DatabaseProvider;
 import de.pc1up.sentinelmc.database.impl.MongoProvider;
+import de.pc1up.sentinelmc.database.impl.MySQLProvider;
+import de.pc1up.sentinelmc.database.impl.SQLiteProvider;
 import de.pc1up.sentinelmc.enums.DatabaseSystem;
 import de.pc1up.sentinelmc.util.MessageUtil;
 import lombok.Getter;
@@ -34,15 +36,21 @@ public final class SentinelMC extends JavaPlugin {
     private void initializeDatabase() {
         String system = this.configuration.getString("database.system", "sqlite");
         if(system.equalsIgnoreCase("sqlite")) {
-            // TODO
             this.databaseSystem = DatabaseSystem.SQLITE;
+            this.databaseProvider = new SQLiteProvider();
         } else if(system.equalsIgnoreCase("mysql")) {
-            //TODO
             this.databaseSystem = DatabaseSystem.MYSQL;
+            this.databaseProvider = new MySQLProvider();
         } else if(system.equalsIgnoreCase("mongodb")) {
             this.databaseSystem = DatabaseSystem.MONGODB;
             this.databaseProvider = new MongoProvider();
+        } else {
+            this.databaseSystem = DatabaseSystem.SQLITE;
+            this.databaseProvider = new SQLiteProvider();
+            this.getLogger().warning("[SentinelMC] WARNING: You provided an invalid database system: '" + system + "'. Only 'mysql', 'sqlite' and 'mongodb' are supported.\n[SentinelMC] WARNING: SentinelMC is falling back to SQLite.");
         }
+
+        this.databaseProvider.initialize();
     }
 
     public void reloadConfig() {
@@ -52,6 +60,6 @@ public final class SentinelMC extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        this.databaseProvider.close();
     }
 }

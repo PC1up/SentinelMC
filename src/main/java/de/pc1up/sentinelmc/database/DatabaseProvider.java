@@ -1,6 +1,7 @@
 package de.pc1up.sentinelmc.database;
 
 import de.pc1up.sentinelmc.punishments.Punishment;
+import de.pc1up.sentinelmc.punishments.Report;
 import de.pc1up.sentinelmc.punishments.UserProfile;
 
 import java.util.List;
@@ -14,5 +15,10 @@ public interface DatabaseProvider {
     void saveUser(UserProfile userProfile);
     UserProfile getProfile(UUID uuid);
     UserProfile getProfile(String name);
+    void saveReport(Report report);
+    Report getReport(String id);
+    List<Report> getReportsAgainst(String name);
+    List<Report> getReportsBy(String name);
+    List<Report> getUnresolvedReports();
     void close();
 }
