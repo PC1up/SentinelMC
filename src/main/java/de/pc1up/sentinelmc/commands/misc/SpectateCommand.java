@@ -39,10 +39,10 @@ public class SpectateCommand implements CommandExecutor {
                         return false;
                     }
 
-                    /*if(targetPlayer.getName().equalsIgnoreCase(player.getName())) {
+                    if(targetPlayer.getName().equalsIgnoreCase(player.getName())) {
                         SentinelMC.instance.getMessageUtil().sendMessage(player, "not_self");
                         return false;
-                    }*/
+                    }
 
                     spectating.put(player.getUniqueId(), player.getLocation());
                     spectatingGameMode.put(player.getUniqueId(), player.getGameMode());
