@@ -36,6 +36,7 @@ public class PunishmentCodec implements Codec<Punishment> {
         writer.writeStartDocument();
         writer.writeString("id", punishment.getId());
         writer.writeString("targetUUID", punishment.getTargetUUID().toString());
+        writer.writeString("authorName", punishment.getAuthorName());
         writer.writeString("reason", punishment.getReason());
         writer.writeInt64("startTime", punishment.getStartTime());
         writer.writeInt64("endTime", punishment.getEndTime());
