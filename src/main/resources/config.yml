@@ -1,0 +1,14 @@
+database:
+  system: 'sqlite' # sqlite / mongodb / mysql
+  credentials:
+    sql:
+      host: 'localhost'
+      port: 3306 # You probably want to change that if you're using MongoDB. The default MongoDB Port ist 27017
+      user: "sentinelmc"
+      password: "changeme"
+      database: "sentinelmc"
+    mongo:
+      connectionstring: "mongodb://localhost:27017/" # For further information visit https://www.mongodb.com/docs/manual/reference/connection-string/
+      database: "sentinelmc"
+messages:
+  prefix: "<red><bold>SentinelMC</bold></red> <dark_gray>»</dark_gray> "

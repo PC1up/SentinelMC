@@ -1,0 +1,4 @@
+name: SentinelMC
+version: '1.0-SNAPSHOT'
+main: de.pc1up.sentinelmc.SentinelMC
+api-version: '1.21'
