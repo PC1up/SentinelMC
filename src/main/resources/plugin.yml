@@ -1,5 +1,5 @@
 name: SentinelMC
-version: '1.0-RELEASE'
+version: '1.0.1'
 main: de.pc1up.sentinelmc.SentinelMC
 api-version: '1.21'
 author: 'PC1up'

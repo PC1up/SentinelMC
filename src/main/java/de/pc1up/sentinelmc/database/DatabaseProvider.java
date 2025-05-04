@@ -1,6 +1,9 @@
 package de.pc1up.sentinelmc.database;
 
-import de.pc1up.sentinelmc.objects.*;
+import de.pc1up.sentinelmc.objects.Punishment;
+import de.pc1up.sentinelmc.objects.Report;
+import de.pc1up.sentinelmc.objects.UserProfile;
+import de.pc1up.sentinelmc.objects.Warning;
 
 import java.util.List;
 import java.util.UUID;

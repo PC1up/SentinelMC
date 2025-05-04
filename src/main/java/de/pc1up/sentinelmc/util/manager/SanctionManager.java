@@ -228,11 +228,8 @@ public class SanctionManager {
         SanctionaryActions action = SanctionaryActions.valueOf(actionString);
         String reason = entry.getString("reason", "Warn Points Exceeded.")
                 .replace("%last-reason%", warning.getReason());
-        String durationName = entry.getString("duration", null);
-        long duration = 0;
-        if (durationName != null) {
-            duration = TimeParser.parseTimeToDuration(durationName, null);
-        }
+        String durationName = entry.getString("duration", "Permanent");
+        long duration = TimeParser.parseTimeToDuration(durationName, null);
 
         return new WarningLadderPunishment(action, maxApplicable, durationName, duration, reason);
     }

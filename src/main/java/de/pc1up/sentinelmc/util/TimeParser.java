@@ -36,6 +36,9 @@ public class TimeParser {
     }
 
     public static long parseTimeToDuration(String input, @Nullable CommandSender sender) {
+        if(input.equalsIgnoreCase("permanent")) {
+            return -1L;
+        }
         ParsedTime parsedTime = parseTime(input);
         if (parsedTime == null) {
             if (sender != null) {
