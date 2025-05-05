@@ -9,6 +9,8 @@ import de.pc1up.sentinelmc.commands.mute.CheckmuteCommand;
 import de.pc1up.sentinelmc.commands.mute.MuteCommand;
 import de.pc1up.sentinelmc.commands.mute.TempmuteCommand;
 import de.pc1up.sentinelmc.commands.mute.UnmuteCommand;
+import de.pc1up.sentinelmc.commands.punish.PunishCommand;
+import de.pc1up.sentinelmc.commands.punish.PunishCommandTabCompleter;
 import de.pc1up.sentinelmc.commands.report.ReportCommand;
 import de.pc1up.sentinelmc.commands.report.ReportlistCommand;
 import de.pc1up.sentinelmc.commands.report.ResolveallCommand;
@@ -25,6 +27,7 @@ import de.pc1up.sentinelmc.listener.ChatListener;
 import de.pc1up.sentinelmc.listener.JoinQuitListener;
 import de.pc1up.sentinelmc.listener.LoginListener;
 import de.pc1up.sentinelmc.util.MessageUtil;
+import de.pc1up.sentinelmc.util.manager.PunishmentTemplateManager;
 import de.pc1up.sentinelmc.util.manager.ReportManager;
 import de.pc1up.sentinelmc.util.manager.SanctionManager;
 import de.pc1up.sentinelmc.util.manager.UserManager;
@@ -56,6 +59,7 @@ public final class SentinelMC extends JavaPlugin {
     private SanctionManager sanctionManager;
     private GUIManager guiManager;
     private ReportManager reportManager;
+    private PunishmentTemplateManager punishmentTemplateManager;
 
     @Override
     public void onEnable() {
@@ -73,6 +77,7 @@ public final class SentinelMC extends JavaPlugin {
         this.sanctionManager = new SanctionManager();
         this.reportManager = new ReportManager();
         this.guiManager = new GUIManager();
+        this.punishmentTemplateManager = new PunishmentTemplateManager(this);
 
         initializeListener();
         intializeCommands();
@@ -138,6 +143,8 @@ public final class SentinelMC extends JavaPlugin {
         if(enableStaffChat) this.getCommand("staffchat").setExecutor(new StaffchatCommand());
 
         this.getCommand("sentinelmc").setExecutor(new SentinelMCCommand());
+        this.getCommand("punish").setExecutor(new PunishCommand());
+        this.getCommand("punish").setTabCompleter(new PunishCommandTabCompleter());
     }
 
     private void initializeListener(){

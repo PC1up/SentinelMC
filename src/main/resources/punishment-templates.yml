@@ -1,0 +1,29 @@
+templates:
+  spamming:
+    action: "TEMPMUTE"
+    duration: "30m"
+    reason: "Spamming in the chat"
+    note: "Automatically punished for spamming."
+
+  cheating:
+    action: "BAN"
+    duration: "-1"
+    reason: "Cheating or unfair advantage"
+    note: "Triggered by anti-cheat."
+
+  harassment:
+    action: "TEMPBAN"
+    duration: "3d"
+    reason: "Harassment of other players"
+    note: ""
+
+  toxicity:
+    action: "MUTE"
+    duration: "-1"
+    reason: "Toxic behavior"
+
+  blacklist:
+    action: "BAN"
+    duration: "-1"
+    reason: "Blacklisted User"
+    permission: "sentinelmc.template.blacklist"

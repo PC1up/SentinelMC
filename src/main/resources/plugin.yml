@@ -1,5 +1,5 @@
 name: SentinelMC
-version: '1.0.1'
+version: '1.1'
 main: de.pc1up.sentinelmc.SentinelMC
 api-version: '1.21'
 author: 'PC1up'
@@ -74,3 +74,6 @@ commands:
   sentinelmc:
     description: 'Config reload command'
     permission: sentinelmc.command.sentinelmc
+  punish:
+    description: 'Allows punishing users based on custom templates'
+    permission: sentinelmc.command.punish

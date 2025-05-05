@@ -16,6 +16,7 @@ public class SentinelMCCommand implements CommandExecutor {
             }
             if(args[0].equalsIgnoreCase("reload")) {
                 SentinelMC.instance.reloadCfg();
+                SentinelMC.instance.getPunishmentTemplateManager().reload();
                 commandSender.sendRichMessage("<green>Configuration reloaded!");
             }
         }

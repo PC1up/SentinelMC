@@ -5,5 +5,9 @@ public enum SanctionaryActions {
     TEMPMUTE,
     MUTE,
     TEMPBAN,
-    BAN
+    BAN;
+
+    public boolean isTemporary() {
+        return this == TEMPBAN || this == TEMPMUTE;
+    }
 }

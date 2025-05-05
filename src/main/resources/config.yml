@@ -167,6 +167,11 @@ messages: # All messages use MiniMessage: https://docs.advntr.dev/minimessage/fo
         - "%PREFIX%   <gray>Duration: <red>%duration%"
         - "%PREFIX%   <gray>Note: <red>%note%"
         - "%PREFIX%   <gray>ID: <red>%id%"
+  punishsystem:
+    punish:
+      usage: "%PREFIX% <red>Usage: /punish <player> <template>"
+      no_perm: "%PREFIX% <red>You are not permitted to use this template. (%permission%)"
+      invalid: "%PREFIX% <red>%template% is not a valid template."
   reportsystem:
     report:
       usage: "%PREFIX% <red>Usage: /report <player> <reason>"
