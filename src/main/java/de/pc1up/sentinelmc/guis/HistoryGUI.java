@@ -33,10 +33,15 @@ public class HistoryGUI extends InventoryGUI {
     public void decorate(Player player){
         decorate(player, 1);
     }
+
     public void decorate(Player player, int page) {
+        this.getButtonMap().clear();
+        this.getInventory().clear();
         int maxItemsPerPage = 45;
         int startIndex = (page - 1) * maxItemsPerPage;
         int endIndex = Math.min(startIndex + maxItemsPerPage, punishments.size());
+
+        int displaySlot = 0;
         for(int i = startIndex; i < endIndex; i++) {
             Punishment punishment = punishments.get(i);
             String statusText;
@@ -64,9 +69,10 @@ public class HistoryGUI extends InventoryGUI {
 
             String itemName = SentinelMC.instance.getMessageUtil().getMessage("history.entry.name", placeholders);
             List<String> lores = SentinelMC.instance.getMessageUtil().getMultiLineMessage("history.entry.lores", placeholders);
-            this.addButton(i, new InventoryButton()
+            this.addButton(displaySlot, new InventoryButton()
                     .creator(p -> new ItemBuilder(Material.PAPER, itemName, lores).build())
                     .consumer(event -> event.setCancelled(true)));
+            displaySlot++;
         }
 
         for (int i = 45; i < 54; i++) {

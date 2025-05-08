@@ -39,6 +39,8 @@ public class ReportlistGUI extends InventoryGUI {
         int maxItemsPerPage = 45;
         int startIndex = (page - 1) * maxItemsPerPage;
         int endIndex = Math.min(startIndex + maxItemsPerPage, resolvedReports.size());
+
+        int displaySlot = 0;
         for(int i = startIndex; i < endIndex; i++) {
             Report report = resolvedReports.get(i);
 
@@ -52,7 +54,7 @@ public class ReportlistGUI extends InventoryGUI {
 
             String itemName = SentinelMC.instance.getMessageUtil().getMessage("reportsystem.reportlist.item.resolved.name", placeholders);
             List<String> lores = SentinelMC.instance.getMessageUtil().getMultiLineMessage("reportsystem.reportlist.item.resolved.lores", placeholders);
-            this.addButton(i, new InventoryButton()
+            this.addButton(displaySlot, new InventoryButton()
                     .creator(p -> new ItemBuilder(Material.PAPER, itemName, lores).build())
                     .consumer(event -> {
                         event.setCancelled(true);
@@ -61,6 +63,7 @@ public class ReportlistGUI extends InventoryGUI {
                         report.save();
                         SentinelMC.instance.getMessageUtil().sendMessage(player, "reportsystem.reportlist.unresolved", Map.of("id", report.getId()));
                     }));
+            displaySlot++;
         }
 
         for (int i = 45; i < 54; i++) {
