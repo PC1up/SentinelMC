@@ -216,14 +216,26 @@ public class MessageUtil {
     }
 
     public void sendMessage(CommandSender sender, String path, Map<String, String> placeholders) {
+        String raw = configuration.getString("messages." + path, "Message not found: " + path);
+        if(raw.trim().equalsIgnoreCase("") || raw.isEmpty() || raw.isBlank()) {
+            return;
+        }
         sender.sendRichMessage(getMessage(path, placeholders));
     }
 
     public void sendMessage(CommandSender sender, String path) {
+        String raw = configuration.getString("messages." + path, "Message not found: " + path);
+        if(raw.trim().equalsIgnoreCase("") || raw.isEmpty() || raw.isBlank()) {
+            return;
+        }
         sender.sendRichMessage(getMessage(path));
     }
 
     public void sendRestrictedMessage(String permission, String path, Map<String, String> placeholders) {
+        String raw = configuration.getString("messages." + path, "Message not found: " + path);
+        if(raw.trim().equalsIgnoreCase("") || raw.isEmpty() || raw.isBlank()) {
+            return;
+        }
         for(Player online : Bukkit.getOnlinePlayers()) {
             if(online.hasPermission(permission)) {
                 sendMessage(online, path, placeholders);

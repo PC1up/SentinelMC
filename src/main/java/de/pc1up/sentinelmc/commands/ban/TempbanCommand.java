@@ -68,6 +68,7 @@ public class TempbanCommand implements CommandExecutor {
             }
 
             long duration = TimeParser.parseTimeToDuration(args[1], commandSender);
+            if(duration == 0) return false;
             long endTime = Instant.now().getEpochSecond() + duration;
 
             String durationString = SentinelMC.instance.getMessageUtil().formatDuration(endTime);
